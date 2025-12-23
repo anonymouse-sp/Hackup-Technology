@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import { sendContactNotification, sendEnrollmentNotification } from './emailService.js';
 
 dotenv.config();
@@ -19,7 +20,8 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from the React app (for production)
-app.use(express.static(path.join(__dirname, '../dist')));
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hackup-technology';
@@ -441,7 +443,12 @@ app.patch('/api/enrollment/:id/status', async (req, res) => {
 // Handle React routing - return all requests to React app for client-side routing
 // This MUST be after all API routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+  const indexPath = path.join(__dirname, '../dist', 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Please build the frontend first: npm run build');
+  }
 });
 
 // Start server

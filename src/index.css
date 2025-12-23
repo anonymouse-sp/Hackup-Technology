@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-primary text-white;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 3s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+.delay-1000 {
+  animation-delay: 1s;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  /* Optimize for printing */
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+  
+  /* Ensure page breaks don't split content awkwardly */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    color: #1a1a1a !important;
+  }
+  
+  /* Adjust colors for print */
+  .bg-primary,
+  .bg-primary-light {
+    background: white !important;
+  }
+  
+  .text-white,
+  .text-text-secondary {
+    color: #1a1a1a !important;
+  }
+  
+  .text-accent {
+    color: #00b894 !important;
+  }
+  
+  .border-gray-800,
+  .border-accent {
+    border-color: #ccc !important;
+  }
+}

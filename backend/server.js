@@ -2,9 +2,14 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { sendContactNotification, sendEnrollmentNotification } from './emailService.js';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,6 +17,9 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the React app (for production)
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hackup-technology';
@@ -428,6 +436,12 @@ app.patch('/api/enrollment/:id/status', async (req, res) => {
       error: error.message
     });
   }
+});
+
+// Handle React routing - return all requests to React app for client-side routing
+// This MUST be after all API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
 // Start server
